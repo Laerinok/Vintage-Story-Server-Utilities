@@ -11,10 +11,10 @@
     # Arguments to pass to Modsupdater.
     # To add multiple arguments, separate them with a space inside the quotes.
     # Example: '--no-pause --no-pdf'
-    ModsupdaterArguments = '--no-pause --no-pdf'
+    ModsupdaterArguments = '--no-pause'
 
     # Temporary local folder where mods will be downloaded and updated.
-    LocalModsFolder = "E:\_Jerome\Bureau\Jeux\Vintage Story\Test script FTP\mods"
+    LocalModsFolder = "E:\Game\Vintage Story\Test script FTP\mods"
 
     # --- FTP SERVER SETTINGS ---
     # WinSCP.com executable path.
@@ -27,4 +27,5 @@
     # FTP server address and remote mods folder path.
     FtpServer = 'your_ftp_server.com'
     RemoteModsPath = '/path/to/your/mods/folder'
+
 }
