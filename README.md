@@ -1,16 +1,16 @@
 # Vintage Story Server Utilities
 
-A collection of utility scripts for managing a Vintage Story server. This repository includes tools for automating mod updates, file synchronization, and other common server maintenance tasks. Scripts are provided for various operating systems, including Windows (PowerShell) and Linux (Bash).
+A collection of utility scripts for managing a Vintage Story server. This repository includes tools for automating mod updates and file synchronization.
 
 ## Files and Scripts
 
 This project is composed of two main files that work together to automate the update process.
 
-* **[update_mods.ps1](update_mods.ps1)**
-    This is the main PowerShell script. It orchestrates the entire mod update and deployment process. The script reads all necessary configurations from `config.psd1`, executes the `Modsupdater` tool to get the latest mods, and then uses WinSCP to synchronize the updated files to a remote FTP server.
+* **[`update_mods.ps1`](update_mods.ps1)**  
+This is the main PowerShell script. It orchestrates the entire mod update and deployment process. The script reads all necessary configurations from `config.psd1`, executes the [`ModsUpdater`](https://github.com/Laerinok/VS_ModsUpdater_v2) tool to get the latest mods, and then uses [WinSCP](https://winscp.net/eng/index.php) to synchronize the updated files to a remote FTP server.
 
-* **[config.psd1](config.psd1)**  
-    This file is the script's configuration file. It stores all user-specific settings, including file paths, application arguments, and FTP credentials. This separation ensures that the main script remains clean and that sensitive information is managed in a single, dedicated location. **Note:** All user configurations must be defined within the `@{} `hashtable.
+* **[`config.psd1`](config.psd1)**  
+This file is the script's configuration file. It stores all user-specific settings, including file paths, application arguments, and FTP credentials. This separation ensures that the main script remains clean and that sensitive information is managed in a single, dedicated location. **Note:** All user configurations must be defined within the `@{} `hashtable.
 
 ## Getting Started
 
@@ -18,8 +18,8 @@ Follow these steps to set up and use the mod update script.
 
 ### Prerequisites
 
-1.  Ensure you have the **Modsupdater** program (`VS_ModsUpdater.exe`) on your computer. You can find it on the project's page.
-2.  Install **WinSCP**. You can download it from the official WinSCP website.
+1.  Ensure you have the **[ModsUpdater](https://github.com/Laerinok/VS_ModsUpdater_v2)** program (`VS_ModsUpdater.exe`) on your computer.
+2.  Install **[WinSCP](https://winscp.net/eng/index.php)**. You can download it from the official WinSCP website.
 
 ### Configuration
 
@@ -28,7 +28,7 @@ Follow these steps to set up and use the mod update script.
 3.  Modify the value for each variable to match your specific setup:
     * `ModsupdaterPath`: The full path to the `VS_ModsUpdater.exe` file.
     * `ModsupdaterArguments`: Any additional command-line arguments you want to pass to Modsupdater (separate them with a space).
-    * `LocalModsFolder`: The path to the folder where Modsupdater will update your mods.
+    * `LocalModsFolder`: The local path to the folder where Modsupdater will update your mods.
     * `WinscpPath`: The full path to the `WinSCP.com` file.
     * `FtpUsername` and `FtpPassword`: Your FTP server login credentials.
     * `FtpServer`: Your FTP server address.
