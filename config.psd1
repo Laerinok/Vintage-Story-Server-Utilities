@@ -6,7 +6,7 @@
 @{
     # --- MODS UPDATER SETTINGS ---
     # Path to the Modsupdater.exe on your computer.
-    ModsupdaterPath = 'E:\Jeux\Vintage Story\_Scripts exe\VS_ModsUpdater_v2_VS.v.1.20.12\VS_ModsUpdater.exe'
+    ModsupdaterPath = 'E:\Game\Vintage Story\_Scripts exe\VS_ModsUpdater_v2_VS.v.1.20.12\VS_ModsUpdater.exe'
 
     # Arguments to pass to Modsupdater.
     # To add multiple arguments, separate them with a space inside the quotes.
@@ -29,3 +29,4 @@
     RemoteModsPath = '/path/to/your/mods/folder'
 
 }
+
