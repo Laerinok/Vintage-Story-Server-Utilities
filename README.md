@@ -9,7 +9,7 @@ This project is composed of two main files that work together to automate the up
 * **[update_mods.ps1](update_mods.ps1)**
     This is the main PowerShell script. It orchestrates the entire mod update and deployment process. The script reads all necessary configurations from `config.psd1`, executes the `Modsupdater` tool to get the latest mods, and then uses WinSCP to synchronize the updated files to a remote FTP server.
 
-* **[config.psd1](config.psd1)**
+* **[config.psd1](config.psd1)**  
     This file is the script's configuration file. It stores all user-specific settings, including file paths, application arguments, and FTP credentials. This separation ensures that the main script remains clean and that sensitive information is managed in a single, dedicated location. **Note:** All user configurations must be defined within the `@{} `hashtable.
 
 ## Getting Started
