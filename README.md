@@ -4,13 +4,19 @@ A collection of utility scripts for managing a Vintage Story server. This reposi
 
 ## Files and Scripts
 
-This project is composed of two main files that work together to automate the update process.
+This project is organized by operating system.
 
-* **[`update_mods.ps1`](update_mods.ps1)**  
-This is the main PowerShell script. It orchestrates the entire mod update and deployment process. The script reads all necessary configurations from `config.psd1`, executes the [`ModsUpdater`](https://github.com/Laerinok/VS_ModsUpdater_v2) tool to get the latest mods, and then uses [WinSCP](https://winscp.net/eng/index.php) to synchronize the updated files to a remote FTP server.
+### Windows (`windows/`)
+* **`update_mods.ps1`**: The main PowerShell script.
+* **`config.psd1`**: Configuration file for Windows.
+* **Tools used**: WinSCP and PowerShell.
 
-* **[`config.psd1`](config.psd1)**  
-This file is the script's configuration file. It stores all user-specific settings, including file paths, application arguments, and FTP credentials. This separation ensures that the main script remains clean and that sensitive information is managed in a single, dedicated location. **Note:** All user configurations must be defined within the `@{} `hashtable.
+### Linux (`linux/`)
+* **`update_mods.sh`**: The main Bash script.
+* **`config.conf`**: Configuration file for Linux.
+* **Tools used**: `lftp` and Bash.
+
+Both scripts execute the `ModsUpdater` tool to get the latest mods and then synchronize them to a remote FTP server.
 
 ## Getting Started
 
@@ -18,34 +24,48 @@ Follow these steps to set up and use the mod update script.
 
 ### Prerequisites
 
-1.  Ensure you have the **[ModsUpdater](https://github.com/Laerinok/VS_ModsUpdater_v2)** program (`VS_ModsUpdater.exe`) on your computer.
-2.  Install **[WinSCP](https://winscp.net/eng/index.php)**. You can download it from the official WinSCP website.
+1.  **ModsUpdater**: Ensure you have the **ModsUpdater** program on your computer.
+2.  **FTP Client**:
+    *   **Windows**: Install **WinSCP**.
+    *   **Linux**: Install **`lftp`** (e.g., `sudo apt install lftp`).
 
-### Configuration
+### Configuration (Windows)
 
-1.  Download the `update_mods.ps1` and `config.psd1` files into the same folder on your computer.
-2.  Open the **`config.psd1`** file with a text editor.
-3.  Modify the value for each variable to match your specific setup:
+1.  Open **`windows/config.psd1`**.
+2.  Modify the values:
     * `ModsupdaterPath`: The full path to the `VS_ModsUpdater.exe` file.
-    * `ModsupdaterArguments`: Any additional command-line arguments you want to pass to Modsupdater (separate them with a space).
     * `LocalModsFolder`: The local path to the folder where Modsupdater will update your mods.
     * `WinscpPath`: The full path to the `WinSCP.com` file.
-    * `FtpUsername` and `FtpPassword`: Your FTP server login credentials.
-    * `FtpServer`: Your FTP server address.
-    * `RemoteModsPath`: The path to the mods folder on your FTP server.
-4.  Save the changes and close the file.
+    * FTP credentials and paths.
+
+### Configuration (Linux)
+
+1.  Open **`linux/config.conf`**.
+2.  Modify the values:
+    * `MODS_UPDATER_PATH`: Path to the executable or `dotnet` command.
+    * `LOCAL_MODS_FOLDER`: Local path for mods.
+    * FTP credentials and paths.
+3.  Make the script executable:
+    ```bash
+    chmod +x linux/update_mods.sh
+    ```
 
 ### Running the Script
 
-1.  Right-click on the **`update_mods.ps1`** file.
+**Windows:**
+1.  Right-click on **`windows/update_mods.ps1`**.
 2.  Select **"Run with PowerShell"**.
 
-The script will run, update your mods locally, and then upload them to your server. A confirmation message will appear in the console once the operation is complete.
+**Linux:**
+1.  Open a terminal.
+2.  Run the script:
+    ```bash
+    ./linux/update_mods.sh
+    ```
 
 ---
 
 ## Compatibility
 
-This script is designed for **Windows** operating systems and requires **PowerShell** to be enabled. It uses Windows-specific tools like WinSCP.
-
-* For **Linux** or **macOS** users, you can adapt the logic of this script to create a compatible version using **Bash** and a command-line FTP client like `lftp`.
+* **Windows**: Requires PowerShell and WinSCP.
+* **Linux**: Requires Bash and lftp.
