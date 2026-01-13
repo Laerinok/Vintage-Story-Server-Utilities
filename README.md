@@ -2,6 +2,12 @@
 
 A collection of utility scripts for managing a Vintage Story server. This repository includes tools for automating mod updates and file synchronization.
 
+## Features
+
+*   **Local Update**: Uses `ModsUpdater` to fetch the latest versions of your mods.
+*   **Automatic Sync**: Automatically uploads updated mods to your remote server via FTP/SFTP.
+*   **Test Mode**: Allows you to simulate the process by syncing files to a local folder instead of a remote server.
+
 ## Files and Scripts
 
 This project is organized by operating system.
@@ -9,18 +15,14 @@ This project is organized by operating system.
 ### Windows (`windows/`)
 * **`update_mods.ps1`**: The main PowerShell script.
 * **`config.psd1`**: Configuration file for Windows.
-* **Tools used**: WinSCP and PowerShell.
+* **Tools used**: WinSCP, `robocopy` (built-in), and PowerShell.
 
 ### Linux (`linux/`)
 * **`update_mods.sh`**: The main Bash script.
-* **`config.conf`**: Configuration file for Linux.
-* **Tools used**: `lftp` and Bash.
-
-Both scripts execute the `ModsUpdater` tool to get the latest mods and then synchronize them to a remote FTP server.
+* **`config.sh`**: Configuration file for Linux.
+* **Tools used**: `lftp`, `rsync`, and Bash.
 
 ## Getting Started
-
-Follow these steps to set up and use the mod update script.
 
 ### Prerequisites
 
@@ -29,26 +31,19 @@ Follow these steps to set up and use the mod update script.
     *   **Windows**: Install **WinSCP**.
     *   **Linux**: Install **`lftp`** (e.g., `sudo apt install lftp`).
 
-### Configuration (Windows)
+### Test Mode (Simulation)
 
-1.  Open **`windows/config.psd1`**.
-2.  Modify the values:
-    * `ModsupdaterPath`: The full path to the `VS_ModsUpdater.exe` file.
-    * `LocalModsFolder`: The local path to the folder where Modsupdater will update your mods.
-    * `WinscpPath`: The full path to the `WinSCP.com` file.
-    * FTP credentials and paths.
+Before deploying to a real server, you can test the script:
+1.  Open your configuration file (`config.psd1` or `config.sh`).
+2.  Set `TestMode` to `true`.
+3.  Define a `LocalMockRemotePath` where you want the "server" files to be simulated.
+4.  Run the script. This will verify if `ModsUpdater` works and if files are correctly organized without needing FTP credentials.
 
-### Configuration (Linux)
+### Production Setup
 
-1.  Open **`linux/config.conf`**.
-2.  Modify the values:
-    * `MODS_UPDATER_PATH`: Path to the executable or `dotnet` command.
-    * `LOCAL_MODS_FOLDER`: Local path for mods.
-    * FTP credentials and paths.
-3.  Make the script executable:
-    ```bash
-    chmod +x linux/update_mods.sh
-    ```
+1.  Set `TestMode` to `false` in your config file.
+2.  Fill in your FTP/SFTP credentials (`Username`, `Password`, `Server Address`).
+3.  Ensure the `RemoteModsPath` matches the folder structure on your host.
 
 ### Running the Script
 
@@ -58,14 +53,12 @@ Follow these steps to set up and use the mod update script.
 
 **Linux:**
 1.  Open a terminal.
-2.  Run the script:
-    ```bash
-    ./linux/update_mods.sh
-    ```
+2.  Make the script executable: `chmod +x linux/update_mods.sh`
+3.  Run the script: `./linux/update_mods.sh`
 
 ---
 
 ## Compatibility
 
-* **Windows**: Requires PowerShell and WinSCP.
-* **Linux**: Requires Bash and lftp.
+* **Windows**: Requires PowerShell 5.1+ and WinSCP.
+* **Linux**: Requires Bash, lftp, and rsync (optional but recommended for test mode).
