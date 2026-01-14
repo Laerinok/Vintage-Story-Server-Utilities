@@ -22,7 +22,9 @@ A collection of utility scripts for managing a Vintage Story server. This reposi
 
 ### Prerequisites
 
-1.  **ModsUpdater**: Download the latest version of [ModsUpdater](https://mods.vintagestory.at/modsupdaterforlinux).
+1.  **ModsUpdater**: Download the latest version of ModsUpdater:
+- [ModsUpdater](https://mods.vintagestory.at/modsupdater)
+- [ModsUpdater for Linux](https://mods.vintagestory.at/modsupdaterforlinux)
 2.  **FTP Client**:
     *   **Windows**: Install [WinSCP](https://winscp.net/).
     *   **Linux**: Install `lftp` (e.g., `sudo apt install lftp`).
