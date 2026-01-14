@@ -65,6 +65,3 @@ Once satisfied with the test:
 
 *   **Windows**: Requires PowerShell 5.1+ and WinSCP.
 *   **Linux**: Requires Bash, lftp, and rsync (for local simulation).
-
-## Author
-**Laerinok** - Creator of [ModsUpdater for Linux](https://mods.vintagestory.at/modsupdaterforlinux).
