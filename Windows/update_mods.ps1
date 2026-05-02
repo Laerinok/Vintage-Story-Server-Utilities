@@ -12,6 +12,7 @@ $configPath = Join-Path -Path $scriptPath -ChildPath "config.psd1"
 # Check if the configuration file exists.
 if (-not (Test-Path $configPath)) {
     Write-Host "Error: The configuration file 'config.psd1' was not found." -ForegroundColor Red
+    Read-Host "Press Enter to exit..."
     exit
 }
 
@@ -21,6 +22,7 @@ try {
     $config = Import-PowerShellDataFile -Path $configPath
 } catch {
     Write-Host "An error occurred while reading the configuration file." -ForegroundColor Red
+    Read-Host "Press Enter to exit..."
     exit
 }
 
@@ -36,6 +38,13 @@ if (-not (Test-Path $config.LocalModsFolder)) {
 # 2. Execute Modsupdater
 Write-Host "Step 2/3: Updating mods with Modsupdater..."
 try {
+    # Check if Modsupdater actually exists before trying to run it
+    if (-not (Test-Path $config.ModsupdaterPath)) {
+        Write-Host "Error: Modsupdater.exe was not found at $($config.ModsupdaterPath)" -ForegroundColor Red
+        Read-Host "Press Enter to exit..."
+        exit
+    }
+
     $modsupdaterDirectory = Split-Path -Path $config.ModsupdaterPath
     $arguments = @()
     if ($config.ModsupdaterArguments -ne '') {
@@ -47,6 +56,7 @@ try {
     Start-Process -FilePath $config.ModsupdaterPath -ArgumentList $arguments -Wait -NoNewWindow -WorkingDirectory $modsupdaterDirectory
 } catch {
     Write-Host "An error occurred while running Modsupdater." -ForegroundColor Red
+    Read-Host "Press Enter to exit..."
     exit
 }
 
@@ -65,7 +75,8 @@ if ($config.TestMode -eq $true) {
 
     # Robocopy /MIR behaves exactly like lftp mirror --delete or WinSCP synchronize
     # /R:0 /W:0 avoids hanging on retry if a file is locked
-    robocopy $config.LocalModsFolder $config.LocalMockRemotePath /MIR /R:0 /W:0
+    # Double quotes are added around paths to prevent errors if folders contain spaces
+    robocopy "$($config.LocalModsFolder)" "$($config.LocalMockRemotePath)" /MIR /R:0 /W:0
 }
 else {
     # --- REAL FTP LOGIC ---
@@ -85,7 +96,8 @@ exit
         & "$($config.WinscpPath)" /script="$tempScriptPath" /loglevel=0
         Remove-Item -Path $tempScriptPath -Force
     } catch {
-        Write-Host "An error occurred during FTP synchronization." -ForegroundColor Red
+        Write-Host "System Error: $($_.Exception.Message)" -ForegroundColor Red
+        Read-Host "Press Enter to exit..."
         exit
     }
 }
@@ -94,3 +106,6 @@ Write-Host "Update completed successfully!" -ForegroundColor Green
 if ($config.TestMode -eq $true) {
     Write-Host "Note: Files were synced to your local test folder (Test Mode)." -ForegroundColor Yellow
 }
+
+# Pause at the end to prevent the PowerShell window from closing immediately
+Read-Host "`nPress Enter to close this window..."
