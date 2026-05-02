@@ -14,7 +14,12 @@ A collection of utility scripts for managing a Vintage Story server. This reposi
 ## Project Structure
 
 *   `linux/`: Bash scripts for Linux users.
+    *   `config.sh`: Configuration file with all settings.
+    *   `update_mods.sh`: Main update script.
 *   `windows/`: PowerShell scripts for Windows users.
+    *   `config.psd1`: Configuration file with all settings.
+    *   `update_mods.ps1`: Main update script.
+    *   `run_updater.bat`: Batch launcher for easy execution.
 
 ---
 
@@ -23,8 +28,8 @@ A collection of utility scripts for managing a Vintage Story server. This reposi
 ### Prerequisites
 
 1.  **ModsUpdater**: Download the latest version of ModsUpdater:
-- [ModsUpdater for Windows](https://mods.vintagestory.at/modsupdater)
-- [ModsUpdater for Linux](https://mods.vintagestory.at/modsupdaterforlinux)
+    - [ModsUpdater for Windows](https://mods.vintagestory.at/modsupdater)
+    - [ModsUpdater for Linux](https://mods.vintagestory.at/modsupdaterforlinux)
 2.  **FTP Client**:
     *   **Windows**: Install [WinSCP](https://winscp.net/).
     *   **Linux**: Install `lftp` (e.g., `sudo apt install lftp`).
@@ -49,6 +54,14 @@ Once satisfied with the test:
 ## Usage
 
 ### Windows
+
+#### Option 1: Using the Batch Launcher (Easiest)
+1.  Navigate to the `windows/` folder.
+2.  Edit `config.psd1` with your settings.
+3.  Double-click `run_updater.bat` to launch the update process.
+    - The console will remain open after execution so you can see the results.
+
+#### Option 2: Using PowerShell Directly
 1.  Navigate to the `windows/` folder.
 2.  Edit `config.psd1` with your settings.
 3.  Right-click `update_mods.ps1` and select **Run with PowerShell**.
@@ -61,7 +74,66 @@ Once satisfied with the test:
 
 ---
 
+## File Explanations
+
+### Windows/run_updater.bat
+The batch file serves as a simple launcher for the PowerShell script:
+- **`@echo off`**: Suppresses command output so only the script's messages are shown.
+- **`PowerShell -NoProfile -ExecutionPolicy Bypass`**: Launches PowerShell without user profile and bypasses execution policy restrictions, allowing the script to run even if PowerShell restrictions are enabled.
+- **`-File "%~dp0update_mods.ps1"`**: Executes the PowerShell script from the same directory as the batch file (`%~dp0` expands to the batch file's directory).
+- **`pause`**: Keeps the console window open after execution completes, allowing you to see the final results and any error messages.
+
+This provides a user-friendly way to run the updater without needing to open PowerShell manually.
+
+### Windows/update_mods.ps1
+The main PowerShell script that orchestrates the entire update process:
+1. **Loads Configuration**: Reads settings from `config.psd1`.
+2. **Prepares Local Folder**: Creates the local mods folder if it doesn't exist.
+3. **Runs ModsUpdater**: Executes ModsUpdater to download the latest mod versions.
+4. **Synchronizes Files**: 
+   - In **Test Mode**: Uses `robocopy` to mirror files to a local test folder.
+   - In **Production Mode**: Uses `WinSCP` to sync files to your remote FTP/SFTP server via SFTP (line 88).
+
+### Windows/config.psd1
+The configuration file containing all user-specific settings:
+- **Paths**: LocalModsFolder, ModsupdaterPath, WinscpPath, LocalMockRemotePath, RemoteModsPath
+- **FTP Credentials**: FtpServer, FtpUsername, FtpPassword
+- **Modsupdater Arguments**: Additional command-line arguments for ModsUpdater
+- **Test Mode Flag**: Boolean to switch between test and production modes
+
+### Linux/update_mods.sh
+The main Bash script for Linux that orchestrates the entire update process:
+1. **Loads Configuration**: Reads settings from `config.sh`.
+2. **Prepares Local Folder**: Creates the local mods folder if it doesn't exist.
+3. **Runs ModsUpdater**: Executes ModsUpdater to download the latest mod versions.
+4. **Synchronizes Files**:
+   - In **Test Mode**: Uses `rsync` to mirror files to a local test folder.
+   - In **Production Mode**: Uses `lftp` to sync files to your remote FTP/SFTP server.
+
+### Linux/config.sh
+The configuration file containing all user-specific settings:
+- **Paths**: LOCAL_MODS_FOLDER, MODSUPDATER_PATH, LOCAL_MOCK_REMOTE_PATH, REMOTE_MODS_PATH
+- **FTP Credentials**: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+- **Modsupdater Arguments**: Additional command-line arguments for ModsUpdater
+- **Test Mode Flag**: Boolean to switch between test and production modes
+
+---
+
 ## Compatibility
 
 *   **Windows**: Requires PowerShell 5.1+ and WinSCP.
-*   **Linux**: Requires Bash, lftp, and rsync (for local simulation).
+*   **Linux**: Requires Bash, lftp, and rsync.
+
+---
+
+## Troubleshooting
+
+### Windows
+- **Script won't run**: Right-click `run_updater.bat` > Properties > Unblock (if available), then try again.
+- **PowerShell execution policy error**: The `run_updater.bat` file bypasses this automatically.
+- **SFTP connection fails (line 88)**: The script uses SFTP by default. If your server doesn't support SFTP, you can modify the connection protocol by changing `open sftp://` to `open ftp://` in the `update_mods.ps1` script (around line 88). However, FTP is less secure than SFTP and should only be used if necessary.
+
+### Linux
+- **Permission denied**: Run `chmod +x update_mods.sh` to make the script executable.
+- **lftp not found**: Install with `sudo apt install lftp` (Debian/Ubuntu) or equivalent for your distro.
+- **Connection issues**: Some hosting providers may require FTP instead of SFTP. Check your hosting documentation or contact support if SFTP doesn't work.
