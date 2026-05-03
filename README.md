@@ -22,6 +22,16 @@ A collection of utility scripts for managing a Vintage Story server. This reposi
     *   `run_updater.bat`: Batch launcher for easy execution.
 
 ---
+> [!CAUTION]
+> ### ⚠️ Warning: Mirror Synchronization
+> This script uses a **Mirror** behavior (`synchronize remote`). 
+> 
+> It makes the server folder **exactly identical** to your local folder. If your server's mods folder contains essential game files (like `VSSurvivalMod.dll`, `VSEssentials.dll`, `VSCreativeMod.dll` etc.) and these files are not present in your local computer's folder, **the script will delete them from the server**.
+>
+> **Prevention:**
+> 1. Always ensure you are syncing to a "clean" mods folder, or
+> 2. Copy the server's core DLL files (or the other files present) to your local folder once so the script won't delete them.
+---
 
 ## Getting Started
 
